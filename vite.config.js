@@ -1,9 +1,20 @@
 import { defineConfig } from "vite";
 import { sveltekit } from "@sveltejs/kit/vite";
+import { viteSingleFile } from 'vite-plugin-singlefile';
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({
+
   plugins: [sveltekit()],
+  // plugins: [sveltekit(), viteSingleFile ()],
+  
+  // build: {
+  //   rollupOptions: {
+  //     output: {
+  //       inlineDynamicImports: true
+  //     }
+  //   }
+  // },
 
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
   //

@@ -1,217 +1,170 @@
 <script lang="ts">
-  import { Button } from "$lib/components/ui/button";
-  import { invoke } from "@tauri-apps/api/tauri";
-  import * as Tabs from "$lib/components/ui/tabs/index";
-  import * as Card from "$lib/components/ui/card/index";
+    import { Button } from "$lib/components/ui/button";
+    import { invoke } from "@tauri-apps/api/tauri";
+    import * as Tabs from "$lib/components/ui/tabs/index";
+    import * as Card from "$lib/components/ui/card/index";
     import { Label } from "$lib/components/ui/label";
     import { Input } from "$lib/components/ui/input";
-  
-  let name = "";
-  let greetMsg = "";
+    import TreeView from "../components/treeView.svelte";
+    import * as Menubar from "$lib/components/ui/menubar";
+    import * as Resizable from "$lib/components/ui/resizable";
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-    greetMsg = await invoke("greet", { name });
-  }
+    import {
+        TemplateDicitonary,
+        getTemplatesList,
+        saveTemplate,
+        type Template,
+    } from "../features/templates/templates";
+    
+    import PlainTextView from "../components/plainTextView.svelte";
+    import TemplateEditor from "../components/dialog/templateEditor.svelte";
+    import { Switch } from "$lib/components/ui/switch";
+    import { checkUpdate } from "@tauri-apps/api/updater";
+
+    $: templates = new TemplateDicitonary();
+    let selectedTemplateId: string | undefined = undefined;
+
+    let isEditMode = true;
+
+    $: selectedTemplate = selectedTemplateId ? templates?.get(selectedTemplateId) : undefined;
+
+    const onSelectNode = (targetId: string) => {
+        selectedTemplateId = targetId;
+        console.log(targetId);
+    };
+
+    const onSave = (text: string) => {
+        
+        if (!selectedTemplateId) return;
+        
+        const template = templates.get(selectedTemplateId);
+
+        if (template) {
+            template.body = text;
+            saveTemplate(template, templates);
+        }
+    }
+
+    const onNewTemplate = () => {
+
+        const temp: Template =  { id: crypto.randomUUID(), body: "", name: "新規テンプレート", parentId: "" };
+        saveTemplate(temp, templates);
+
+        // templates.set(temp.id, temp);
+        templates = new TemplateDicitonary([...Array.from(templates), [temp.id, temp]]);
+    }
+
+    const onNewChildTemplate = () => {
+
+        console.log(selectedTemplateId);
+
+        if (!selectedTemplateId) return;
+
+        const temp: Template =  { id: crypto.randomUUID(), body: "", name: "新規子テンプレート", parentId: selectedTemplateId };
+        saveTemplate(temp, templates);
+
+        templates = new TemplateDicitonary([...Array.from(templates), [temp.id, temp]]);
+
+        // templates.set(temp.id, temp);
+        // templates = new TemplateDicitonary(templates);
+    }
+
+    const onToggleEdit = () => {
+        isEditMode = !isEditMode;
+    }
+
+    //こっちじゃなくてもいい？
+    // getTemplatesList().then(t => templates = new TemplateDicitonary(t));
+    getTemplatesList().then((t) => (templates = t));
+
 </script>
 
-<div class="container">
-  <h1>Welcome to Tauri!</h1>
+<div class="app_struct">
+    <div class="border-b">
+        <nav class="flex h-16 items-center px-4">
+            <a
+                href="#"
+                class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+                >Shadow</a
+            >
 
-  <Button>aa</Button>
+            <!-- <Button class="pl-[16px] pr-[128px] text-left" variant="outline">{}</Button> -->
+            <Button class="pl-[16px] pr-[128px] text-left" variant="outline">キーワード検索...</Button>
 
-   
-  <Tabs.Root value="account" class="w-[400px]">
-    <Tabs.List class="grid w-full grid-cols-2">
-      <Tabs.Trigger value="account">Account</Tabs.Trigger>
-      <Tabs.Trigger value="password">Password</Tabs.Trigger>
-    </Tabs.List>
-    <Tabs.Content value="account">
-      <Card.Root>
-        <Card.Header>
-          <Card.Title>Account</Card.Title>
-          <Card.Description>
-            Make changes to your account here. Click save when you're done.
-          </Card.Description>
-        </Card.Header>
-        <Card.Content class="space-y-2">
-          <div class="space-y-1">
-            <Label for="name">Name</Label>
-            <Input id="name" value="Pedro Duarte" />
-          </div>
-          <div class="space-y-1">
-            <Label for="username">Username</Label>
-            <Input id="username" value="@peduarte" />
-          </div>
-        </Card.Content>
-        <Card.Footer>
-          <Button>Save changes</Button>
-        </Card.Footer>
-      </Card.Root>
-    </Tabs.Content>
-    <Tabs.Content value="password">
-      <Card.Root>
-        <Card.Header>
-          <Card.Title>Password</Card.Title>
-          <Card.Description>
-            Change your password here. After saving, you'll be logged out.
-          </Card.Description>
-        </Card.Header>
-        <Card.Content class="space-y-2">
-          <div class="space-y-1">
-            <Label for="current">Current password</Label>
-            <Input id="current" type="password" />
-          </div>
-          <div class="space-y-1">
-            <Label for="new">New password</Label>
-            <Input id="new" type="password" />
-          </div>
-        </Card.Content>
-        <Card.Footer>
-          <Button>Save password</Button>
-        </Card.Footer>
-      </Card.Root>
-    </Tabs.Content>
-  </Tabs.Root>
+            <div class="flex items-center space-x-2">
+                <Switch id="airplane-mode" onCheckedChange={onToggleEdit}/>
+                <Label for="airplane-mode">編集モード</Label>
+            </div>
 
-  <div class="row">
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo vite" alt="Vite Logo" />
-    </a>
-    <a href="https://tauri.app" target="_blank">
-      <img src="/tauri.svg" class="logo tauri" alt="Tauri Logo" />
-    </a>
-    <a href="https://kit.svelte.dev" target="_blank">
-      <img src="/svelte.svg" class="logo svelte-kit" alt="SvelteKit Logo" />
-    </a>
-  </div>
+            {#if !isEditMode} 
+                <Button variant="outline" on:click={onNewTemplate}>新規</Button>
+                <Button variant="outline" on:click={onNewChildTemplate}>新規子</Button>
+            {/if}
 
-  <p>Click on the Tauri, Vite, and SvelteKit logos to learn more.</p>
+        </nav>
+    </div>
 
-  <form class="row" on:submit|preventDefault={greet}>
-    <input id="greet-input" placeholder="Enter a name..." bind:value={name} />
-    <button type="submit">Greet</button>
-  </form>
+    <div class="container">
 
-  <p>{greetMsg}</p>
+        <Resizable.PaneGroup direction="horizontal">
+            <Resizable.Pane defaultSize={20}>
+                <TreeView {...{ templates, onSelectNode }}></TreeView>
+            </Resizable.Pane>
+            <Resizable.Handle withHandle  />
+            <Resizable.Pane defaultSize={20}>
+                <!-- <div class="border-r"></div> -->
+            </Resizable.Pane>
+            <Resizable.Handle withHandle  />
+            <Resizable.Pane>
+
+                {#if isEditMode} 
+                    <PlainTextView source={selectedTemplate?.body} />
+                {:else}    
+                    <TemplateEditor text={selectedTemplate?.body} {onSave }></TemplateEditor>
+                {/if}
+
+            </Resizable.Pane>
+          </Resizable.PaneGroup>
+
+    </div>
+
+
 </div>
 
+<!-- <form class="row" on:submit|preventDefault={greet}>
+        <input id="greet-input" placeholder="Enter a name..." bind:value={name} />
+        <button type="submit">Greet</button>
+      </form> -->
+
 <style>
-  .logo.vite:hover {
-    filter: drop-shadow(0 0 2em #747bff);
-  }
-
-  .logo.svelte-kit:hover {
-    filter: drop-shadow(0 0 2em #ff3e00);
-  }
-
-  :root {
-    font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-    font-size: 16px;
-    line-height: 24px;
-    font-weight: 400;
-
-    color: #0f0f0f;
-    background-color: #f6f6f6;
-
-    font-synthesis: none;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-text-size-adjust: 100%;
-  }
-
-  .container {
-    margin: 0;
-    padding-top: 10vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-  }
-
-  .logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-    transition: 0.75s;
-  }
-
-  .logo.tauri:hover {
-    filter: drop-shadow(0 0 2em #24c8db);
-  }
-
-  .row {
-    display: flex;
-    justify-content: center;
-  }
-
-  a {
-    font-weight: 500;
-    color: #646cff;
-    text-decoration: inherit;
-  }
-
-  a:hover {
-    color: #535bf2;
-  }
-
-  h1 {
-    text-align: center;
-  }
-
-  input,
-  button {
-    border-radius: 8px;
-    border: 1px solid transparent;
-    padding: 0.6em 1.2em;
-    font-size: 1em;
-    font-weight: 500;
-    font-family: inherit;
-    color: #0f0f0f;
-    background-color: #ffffff;
-    transition: border-color 0.25s;
-    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
-  }
-
-  button {
-    cursor: pointer;
-  }
-
-  button:hover {
-    border-color: #396cd8;
-  }
-  button:active {
-    border-color: #396cd8;
-    background-color: #e8e8e8;
-  }
-
-  input,
-  button {
-    outline: none;
-  }
-
-  #greet-input {
-    margin-right: 5px;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :root {
-      color: #f6f6f6;
-      background-color: #2f2f2f;
+    .app_struct {
+        overflow: hidden;
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr);
+        width: 100vw;
+        height: 100vh;
+        padding: 0;
+        margin: 0;
     }
 
-    a:hover {
-      color: #24c8db;
+    .container {
+        /* display: grid; */
+        /* grid-template-columns: 20% 20% 1fr; */
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        margin: 0;
     }
 
-    input,
-    button {
-      color: #ffffff;
-      background-color: #0f0f0f98;
+    .top_pane {
     }
-    button:active {
-      background-color: #0f0f0f69;
+
+    .main_pane {
     }
-  }
+
+    .paine_pane {
+    }
+
+    .paine_pane {
+    }
 </style>

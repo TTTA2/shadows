@@ -21,7 +21,7 @@
     import { Switch } from "$lib/components/ui/switch";
     import { checkUpdate } from "@tauri-apps/api/updater";
 
-    $: templates = new TemplateDicitonary();
+    let templates = new TemplateDicitonary();
     let selectedTemplateId: string | undefined = undefined;
 
     let isEditMode = true;
@@ -50,8 +50,9 @@
         const temp: Template =  { id: crypto.randomUUID(), body: "", name: "新規テンプレート", parentId: "" };
         saveTemplate(temp, templates);
 
-        // templates.set(temp.id, temp);
-        templates = new TemplateDicitonary([...Array.from(templates), [temp.id, temp]]);
+        templates.set(temp.id, temp);
+        templates = templates;
+        // templates = new TemplateDicitonary([...Array.from(templates), [temp.id, temp]]);
     }
 
     const onNewChildTemplate = () => {
@@ -63,7 +64,10 @@
         const temp: Template =  { id: crypto.randomUUID(), body: "", name: "新規子テンプレート", parentId: selectedTemplateId };
         saveTemplate(temp, templates);
 
+        templates.set(temp.id, temp);
+        // templates = templates;
         templates = new TemplateDicitonary([...Array.from(templates), [temp.id, temp]]);
+        
 
         // templates.set(temp.id, temp);
         // templates = new TemplateDicitonary(templates);
@@ -81,26 +85,29 @@
 
 <div class="app_struct">
     <div class="border-b">
-        <nav class="flex h-16 items-center px-4">
+        <nav class="flex h-16 items-center px-4 gap-10 justify-between">
             <a
                 href="#"
                 class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
                 >Shadow</a
             >
+                <div class="flex w-120 gap-[32px]">
+                <!-- <Button class="pl-[16px] pr-[128px] text-left" variant="outline">{}</Button> -->
+                <Button class="pl-[16px] pr-[128px] text-left" variant="outline">キーワード検索...</Button>
 
-            <!-- <Button class="pl-[16px] pr-[128px] text-left" variant="outline">{}</Button> -->
-            <Button class="pl-[16px] pr-[128px] text-left" variant="outline">キーワード検索...</Button>
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <Switch id="airplane-mode" onCheckedChange={onToggleEdit}/>
+                        <Label for="airplane-mode">編集モード</Label>
+                    </div>
+        
+                    {#if !isEditMode} 
+                        <Button variant="outline" on:click={onNewTemplate}>新規</Button>
+                        <Button variant="outline" on:click={onNewChildTemplate}>新規子</Button>
+                    {/if}
+                </div>
 
-            <div class="flex items-center space-x-2">
-                <Switch id="airplane-mode" onCheckedChange={onToggleEdit}/>
-                <Label for="airplane-mode">編集モード</Label>
             </div>
-
-            {#if !isEditMode} 
-                <Button variant="outline" on:click={onNewTemplate}>新規</Button>
-                <Button variant="outline" on:click={onNewChildTemplate}>新規子</Button>
-            {/if}
-
         </nav>
     </div>
 
@@ -108,7 +115,8 @@
 
         <Resizable.PaneGroup direction="horizontal">
             <Resizable.Pane defaultSize={20}>
-                <TreeView {...{ templates, onSelectNode }}></TreeView>
+                <TreeView bind:templates={templates} {...{ onSelectNode }}></TreeView>
+                <!-- <TreeView bind:templates={templates} {...{ templates, onSelectNode }}></TreeView> -->
             </Resizable.Pane>
             <Resizable.Handle withHandle  />
             <Resizable.Pane defaultSize={20}>

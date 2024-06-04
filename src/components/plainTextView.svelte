@@ -1,6 +1,8 @@
 <script lang="ts">
 
     import CodeArea from "./codeArea.svelte";
+    // import { Svelvet } from 'svelvet';
+
 
     type ElementType = "notice" | "text" | "code";
 
@@ -69,7 +71,13 @@
 
     $: elements = toElements(source);
 
+    
+	const mermaidStr = `A[コック]-->>[フライパン: ハンバーグを焼く]
+    B[フライパン]-->>[コック : 焼き上がり]`;
+
 </script>
+
+<!-- <Svelvet theme="dark" width={800} height={800} editable={false}  controls mermaid={mermaidStr} /> -->
 
 <div class="viewer">
 
@@ -85,7 +93,6 @@
 
     {/each}
 
-    <!-- {source} -->
 </div>
 
 <style>

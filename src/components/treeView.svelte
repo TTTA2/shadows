@@ -23,7 +23,7 @@
     {#if templates} 
         {#each (templates.values()) as a }
             {#if a.parentId == ""}
-                <TreeViewItem id={a.id} {...{templates, nodeStates, onExpand, onSelect}}></TreeViewItem>
+                <TreeViewItem id={a.id} bind:templates={templates} {...{ nodeStates, onExpand, onSelect}}></TreeViewItem>
             {/if}
         {/each}
     {/if}

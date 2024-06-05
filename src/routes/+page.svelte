@@ -20,6 +20,7 @@
     import TemplateEditor from "../components/dialog/templateEditor.svelte";
     import { Switch } from "$lib/components/ui/switch";
     import { checkUpdate } from "@tauri-apps/api/updater";
+    import ViewPane from "../components/viewPane/viewPane.svelte";
 
     let templates = new TemplateDicitonary();
     let selectedTemplateId: string | undefined = undefined;
@@ -111,7 +112,7 @@
         </nav>
     </div>
 
-    <div class="container">
+    <div class="acontainer">
 
         <Resizable.PaneGroup direction="horizontal">
             <Resizable.Pane defaultSize={20}>
@@ -123,13 +124,15 @@
                 <!-- <div class="border-r"></div> -->
             </Resizable.Pane>
             <Resizable.Handle withHandle  />
-            <Resizable.Pane>
+            <Resizable.Pane class="w-full h-full">
 
-                {#if isEditMode} 
+                <ViewPane></ViewPane>
+
+                <!-- {#if isEditMode} 
                     <PlainTextView source={selectedTemplate?.body} />
                 {:else}    
                     <TemplateEditor text={selectedTemplate?.body} {onSave }></TemplateEditor>
-                {/if}
+                {/if} -->
 
             </Resizable.Pane>
           </Resizable.PaneGroup>
@@ -155,7 +158,7 @@
         margin: 0;
     }
 
-    .container {
+    .acontainer {
         /* display: grid; */
         /* grid-template-columns: 20% 20% 1fr; */
         width: 100%;

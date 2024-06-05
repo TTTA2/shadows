@@ -1,7 +1,7 @@
 <script lang="ts">
 
     import CodeArea from "./codeArea.svelte";
-    // import { Svelvet } from 'svelvet';
+    import { Svelvet, Node } from 'svelvet';
 
 
     type ElementType = "notice" | "text" | "code";
@@ -77,7 +77,11 @@
 
 </script>
 
-<!-- <Svelvet theme="dark" width={800} height={800} editable={false}  controls mermaid={mermaidStr} /> -->
+<!-- <Svelvet theme="dark" width={800} height={800} editable={false}  controls>
+    <Node></Node>
+    <Node></Node>
+    <Node></Node>
+</Svelvet> -->
 
 <div class="viewer">
 
@@ -98,6 +102,7 @@
 <style>
 
     .viewer {
+        width: 100%;
         height: 100%;
         padding: 16px;
         overflow: auto;

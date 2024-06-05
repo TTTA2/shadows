@@ -12,6 +12,7 @@
     export let onSelect = (targetId: string) => {};
 
     $: hasChild = hasChildren(id, templates);
+    $: children = getChildren(id, templates).sort((a, b) => a.name.localeCompare(b.name));
 
     const onClick = () => onSelect(id);
         
@@ -44,7 +45,7 @@
 
     {#if expanded && hasChild}
         <div class="chidlren">
-            {#each (getChildren(id, templates)) as a }
+            {#each (children) as a }
                 <svelte:self {...{id: a.id, templates, nodeStates, onExpand, onSelect }}></svelte:self>
             {/each}
         </div>

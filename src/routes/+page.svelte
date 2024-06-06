@@ -29,7 +29,7 @@
 
     $: selectedTemplate = selectedTemplateId ? templates?.get(selectedTemplateId) : undefined;
 
-    const onSelectNode = (targetId: string) => {
+    const onSelectNode = (targetId: string | undefined) => {
         selectedTemplateId = targetId;
         console.log(targetId);
     };
@@ -126,13 +126,9 @@
             <Resizable.Handle withHandle  />
             <Resizable.Pane class="w-full h-full">
 
-                <ViewPane></ViewPane>
+                <ViewPane {...{onSave, selectedTemplate, isEditMode}}></ViewPane>
 
-                <!-- {#if isEditMode} 
-                    <PlainTextView source={selectedTemplate?.body} />
-                {:else}    
-                    <TemplateEditor text={selectedTemplate?.body} {onSave }></TemplateEditor>
-                {/if} -->
+
 
             </Resizable.Pane>
           </Resizable.PaneGroup>

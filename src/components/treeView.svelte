@@ -8,7 +8,9 @@
     export let templates: TemplateDicitonary | undefined;
     export let nodeStates = new Map<string, boolean>();
 
-    export let onSelectNode = (targetId: string) => {};
+    export let onSelectNode = (targetId: string | undefined) => {};
+
+    let clickId = { id1: "", id2: "" }
 
     const onExpand = (targetId: string, newState: boolean) => {
         nodeStates.set(targetId, newState);
@@ -19,10 +21,20 @@
 
         selectedId = targetId;
 
+        clickId.id1 = crypto.randomUUID();
+
         console.log("A");
     }
 
     const onClick = () => {
+
+        if (clickId.id1 == "") {
+            onSelectNode(undefined);
+            selectedId = undefined
+        }
+
+        clickId.id1 = "";
+
         // selectedId = undefined;
         console.log("B");
     }

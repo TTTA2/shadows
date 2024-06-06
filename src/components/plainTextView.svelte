@@ -17,6 +17,8 @@
 
         const el: ElementNode[] = [];
 
+        if (src == undefined) return el;
+
         let dmark = 0;
         let dopen = false;
 

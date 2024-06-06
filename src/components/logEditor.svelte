@@ -35,7 +35,7 @@
 
 </script>
 
-<div class="h-full overflow-auto">
+<div class="h-full overflow-auto p-8">
     {#each log as l, i}
         <div>{l.prefix}</div>
         <div contenteditable data-index={i} on:input={onInput}></div>

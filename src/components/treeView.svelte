@@ -3,6 +3,8 @@
     import { TemplateDicitonary, getTemplatesList, hasChildren, type Template } from "../features/templates/templates";
     import TreeViewItem from "./treeViewItem.svelte";
 
+    export let selectedId: string | undefined = undefined;
+
     export let templates: TemplateDicitonary | undefined;
     export let nodeStates = new Map<string, boolean>();
 
@@ -14,16 +16,24 @@
 
     const onSelect = (targetId: string) => {
         onSelectNode(targetId);
+
+        selectedId = targetId;
+
+        console.log("A");
+    }
+
+    const onClick = () => {
+        // selectedId = undefined;
+        console.log("B");
     }
 
 </script>
 
-
-<div class="w-full h-full p-2 overflow-auto">
+<div class="w-full h-full p-2 overflow-auto" on:click={onClick}>
     {#if templates} 
         {#each (templates.values()) as a }
             {#if a.parentId == ""}
-                <TreeViewItem id={a.id} bind:templates={templates} {...{ nodeStates, onExpand, onSelect}}></TreeViewItem>
+                <TreeViewItem id={a.id} bind:templates={templates} {...{ selectedId, nodeStates, onExpand, onSelect}}></TreeViewItem>
             {/if}
         {/each}
     {/if}

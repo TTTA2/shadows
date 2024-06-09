@@ -85,6 +85,7 @@
 </script>
 
 <div class="app_struct">
+    
     <div class="border-b">
         <nav class="flex h-16 items-center px-4 gap-10 justify-between">
             <a
@@ -120,10 +121,13 @@
                 <!-- <TreeView bind:templates={templates} {...{ templates, onSelectNode }}></TreeView> -->
             </Resizable.Pane>
             <Resizable.Handle withHandle  />
-            <Resizable.Pane defaultSize={20}>
+            <!-- <Resizable.Pane defaultSize={20}> -->
+
+                
+
                 <!-- <div class="border-r"></div> -->
-            </Resizable.Pane>
-            <Resizable.Handle withHandle  />
+            <!-- </Resizable.Pane> -->
+            <!-- <Resizable.Handle withHandle  /> -->
             <Resizable.Pane class="w-full h-full">
 
                 <ViewPane {...{onSave, selectedTemplate, isEditMode}}></ViewPane>

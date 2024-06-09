@@ -15,7 +15,7 @@
 
   </script>
 
-  <Tabs.Root value="log" class="h-full grid grid-rows-[auto_minmax(0,1fr)]">
+  <Tabs.Root value="templates" class="h-full grid grid-rows-[auto_minmax(0,1fr)]">
     <Tabs.List class="tabList">
       <Tabs.Trigger value="templates">テンプレート</Tabs.Trigger>
       <Tabs.Trigger value="log">応対履歴</Tabs.Trigger>

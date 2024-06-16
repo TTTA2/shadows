@@ -11,12 +11,18 @@ export class TemplateDicitonary extends Map<string, Template> { }
 
 export const getTemplatesList = async (): Promise<TemplateDicitonary> => {
 
-    const templates: any[] = await invoke("get_templates_info");
+    // const templates: any[] = await invoke("get_templates_info");
 
-    return new TemplateDicitonary(templates.map(t => {
-        const { id, name, body } = t, parentId = t.parentId;
-        return [ t.id, { id, name, parentId, body } ];
-    }));
+    const t: any[] = await invoke("get_templates_file_data");
+
+    console.log(t);
+
+    // return new TemplateDicitonary(templates.map(t => {
+    //     const { id, name, body } = t, parentId = t.parentId;
+    //     return [ t.id, { id, name, parentId, body } ];
+    // }));
+
+    return new TemplateDicitonary();
 }
 
 export const saveTemplate = async (template: Template, templates: TemplateDicitonary) => {

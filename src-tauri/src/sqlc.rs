@@ -25,6 +25,7 @@ pub fn init(connection: Connection) {
     connection.execute(query);
 }
 
+
 pub fn write_template(connection: Connection, template_info: TemplateInfo, isUpdate: bool) -> Result<String> {
 
     // let a: Result<String, Error>;

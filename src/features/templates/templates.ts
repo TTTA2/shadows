@@ -5,25 +5,73 @@ export type Template = {
     name: string,
     parentId: string,
     body: string,
+    path: string,
 }
 
 export class TemplateDicitonary extends Map<string, Template> { }
 
-export const getTemplatesList = async (): Promise<TemplateDicitonary> => {
 
-    // const templates: any[] = await invoke("get_templates_info");
+    export const getTemplatesList = async (): Promise<TemplateDicitonary> => {
 
-    const t: any[] = await invoke("get_templates_file_data");
+        const t: any[] = await invoke("get_templates_file_data");
 
-    console.log(t);
+        const entries: TemplateDicitonary = new TemplateDicitonary();
+        const pathes = new Map<string, string>();
 
-    // return new TemplateDicitonary(templates.map(t => {
-    //     const { id, name, body } = t, parentId = t.parentId;
-    //     return [ t.id, { id, name, parentId, body } ];
-    // }));
+        for (const entry of t) {
 
-    return new TemplateDicitonary();
-}
+            const { name, contents, path, parent, kind } = entry;
+            
+            const id = crypto.randomUUID();
+            const parentId = pathes.get(parent) ?? "";
+            const template: Template = { id, parentId, body: contents, name, path};
+            
+            pathes.set(path, id);
+            entries.set(id, template);
+        }
+
+        console.log(entries, pathes);
+
+        // return new TemplateDicitonary(templates.map(t => {
+        //     const { id, name, body } = t, parentId = t.parentId;
+        //     return [ t.id, { id, name, parentId, body } ];
+        // }));
+
+        return entries;
+    }
+
+// export const getTemplatesList = async (): Promise<TemplateDicitonary> => {
+
+//     const t: any[] = await invoke("get_templates_file_data");
+
+//     const entries: TemplateDicitonary = new TemplateDicitonary();
+//     const parentKeys = new Map<string, string>();
+
+//     for (const entry of t) {
+
+//         const { name, contents, path, parent } = entry;
+
+//         if (parent && !parentKeys.has(parent)) parentKeys.set(parent, crypto.randomUUID());
+
+//         const id = crypto.randomUUID();
+//         const parentId = parent ? (parentKeys.get(parent) ?? "") : "";
+
+//         const template: Template = { id, parentId, body: contents, name};
+
+//         entries.set(id, template);
+//     }
+
+    
+
+//     console.log(parentKeys);
+
+//     // return new TemplateDicitonary(templates.map(t => {
+//     //     const { id, name, body } = t, parentId = t.parentId;
+//     //     return [ t.id, { id, name, parentId, body } ];
+//     // }));
+
+//     return entries;
+// }
 
 export const saveTemplate = async (template: Template, templates: TemplateDicitonary) => {
     const isUpdate = templates.get(template.id) != undefined;
@@ -32,6 +80,7 @@ export const saveTemplate = async (template: Template, templates: TemplateDicito
 }
 
 export const hasChildren = (targetId: string, templates: TemplateDicitonary) => {
+
     return Array.from(templates.values()).find(t => t.parentId == targetId) != undefined;
 }
 

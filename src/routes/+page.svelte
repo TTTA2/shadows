@@ -80,7 +80,7 @@
 
     //こっちじゃなくてもいい？
     // getTemplatesList().then(t => templates = new TemplateDicitonary(t));
-    getTemplatesList().then((t) => (templates = t));
+    getTemplatesList().then((t) => templates = t);
 
 </script>
 

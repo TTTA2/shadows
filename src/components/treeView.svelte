@@ -36,7 +36,7 @@
         clickId.id1 = "";
 
         // selectedId = undefined;
-        console.log("B");
+        console.log(templates);
     }
 
 </script>

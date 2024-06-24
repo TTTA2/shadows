@@ -2,7 +2,7 @@
 
     import CodeArea from "./codeArea.svelte";
     import { Svelvet, Node } from 'svelvet';
-
+    import markdownit from 'markdown-it';
 
     type ElementType = "notice" | "text" | "code";
 
@@ -12,6 +12,11 @@
     }
 
     export let source = "";
+
+    const md = markdownit()
+    $: result = md.render(source);
+
+    console.log(result);
 
     const toElements = (src: string) => {
 
@@ -85,7 +90,11 @@
     <Node></Node>
 </Svelvet> -->
 
-<div class="viewer">
+<div class="prose prose  p-8 my-4 mx-auto bg-gray-100 dark:bg-gray-300 viewer">
+    {@html result}
+</div>
+
+<!-- <div class="viewer">
 
     {#each elements as e}
         
@@ -99,7 +108,7 @@
 
     {/each}
 
-</div>
+</div> -->
 
 <style>
 
@@ -109,6 +118,8 @@
         padding: 16px;
         overflow: auto;
     }
+
+
 
     .text {
         padding: 8px;

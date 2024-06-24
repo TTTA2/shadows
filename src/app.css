@@ -76,3 +76,19 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* .viewer ul {
+  list-style: disc;
+  padding: 0 0 0 40px;
+  margin: 16px 0 16px 0;
+}
+
+.viewer ol {
+  list-style: decimal;
+  padding: 0 0 0 40px;
+  margin: 16px 0 16px 0;
+}
+
+.viewer a {
+  color: blue;
+} */

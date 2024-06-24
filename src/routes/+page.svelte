@@ -5,7 +5,7 @@
     import * as Card from "$lib/components/ui/card/index";
     import { Label } from "$lib/components/ui/label";
     import { Input } from "$lib/components/ui/input";
-    import TreeView from "../components/treeView.svelte";
+    import TreeView from "../components/trreeView/treeView.svelte";
     import * as Menubar from "$lib/components/ui/menubar";
     import * as Resizable from "$lib/components/ui/resizable";
 

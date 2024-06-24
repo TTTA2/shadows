@@ -1,6 +1,6 @@
 <script lang="ts">
     
-    import { TemplateDicitonary, getChildren, hasChildren, type Template } from "../features/templates/templates";
+    import { TemplateDicitonary, getChildren, hasChildren, type Template } from "../../features/templates/templates";
     
     export let templates: TemplateDicitonary = new TemplateDicitonary();
     export let nodeStates: Map<string, boolean> | undefined;

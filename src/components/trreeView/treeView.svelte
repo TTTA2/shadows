@@ -1,6 +1,6 @@
 <script lang="ts">
 
-    import { TemplateDicitonary, getTemplatesList, hasChildren, type Template } from "../features/templates/templates";
+    import { TemplateDicitonary, getTemplatesList, hasChildren, type Template } from "../../features/templates/templates";
     import TreeViewItem from "./treeViewItem.svelte";
 
     export let selectedId: string | undefined = undefined;
